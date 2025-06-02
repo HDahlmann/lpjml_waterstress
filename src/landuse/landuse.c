@@ -492,30 +492,30 @@ Bool getlanduse(Landuse landuse,     /**< Pointer to landuse data */
       case NO_IRRIGATION:
         for (j = 0; j < ncft; j++)
         {
-          grid[cell].ml.landfrac[0].crop[j] += grid[cell].ml.landfrac[1].crop[j];
-          grid[cell].ml.landfrac[1].crop[j] = 0;
+          //grid[cell].ml.landfrac[0].crop[j] += grid[cell].ml.landfrac[1].crop[j];
+          //grid[cell].ml.landfrac[1].crop[j] = 0;
           grid[cell].ml.irrig_system->crop[j] = NOIRRIG;
         }
         for (j = 0; j < NGRASS; j++)
         {
-          grid[cell].ml.landfrac[0].grass[j] += grid[cell].ml.landfrac[1].grass[j];
-          grid[cell].ml.landfrac[1].grass[j] = 0;
+          //grid[cell].ml.landfrac[0].grass[j] += grid[cell].ml.landfrac[1].grass[j];
+          //grid[cell].ml.landfrac[1].grass[j] = 0;
           grid[cell].ml.irrig_system->grass[j] = NOIRRIG;
         }
-        grid[cell].ml.landfrac[0].biomass_grass += grid[cell].ml.landfrac[1].biomass_grass;
-        grid[cell].ml.landfrac[1].biomass_grass = 0;
+        //grid[cell].ml.landfrac[0].biomass_grass += grid[cell].ml.landfrac[1].biomass_grass;
+        //grid[cell].ml.landfrac[1].biomass_grass = 0;
         grid[cell].ml.irrig_system->biomass_grass = NOIRRIG;
-        grid[cell].ml.landfrac[0].biomass_tree += grid[cell].ml.landfrac[1].biomass_tree;
-        grid[cell].ml.landfrac[1].biomass_tree = 0;
+        //grid[cell].ml.landfrac[0].biomass_tree += grid[cell].ml.landfrac[1].biomass_tree;
+        //grid[cell].ml.landfrac[1].biomass_tree = 0;
         grid[cell].ml.irrig_system->biomass_tree = NOIRRIG;
         for (j = 0; j < config->nagtree; j++)
         {
-          grid[cell].ml.landfrac[0].ag_tree[j] += grid[cell].ml.landfrac[1].ag_tree[j];
-          grid[cell].ml.landfrac[1].ag_tree[j] = 0;
+          //grid[cell].ml.landfrac[0].ag_tree[j] += grid[cell].ml.landfrac[1].ag_tree[j];
+          //grid[cell].ml.landfrac[1].ag_tree[j] = 0;
           grid[cell].ml.irrig_system->ag_tree[j] = NOIRRIG;
         }
-        grid[cell].ml.landfrac[0].woodplantation += grid[cell].ml.landfrac[1].woodplantation;
-        grid[cell].ml.landfrac[1].woodplantation=0;
+        //grid[cell].ml.landfrac[0].woodplantation += grid[cell].ml.landfrac[1].woodplantation;
+        //grid[cell].ml.landfrac[1].woodplantation=0;
         grid[cell].ml.irrig_system->woodplantation = NOIRRIG;
         break;
       case ALL_IRRIGATION:

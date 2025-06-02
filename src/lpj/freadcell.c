@@ -41,9 +41,7 @@ Bool freadcell(FILE *file,             /**< File pointer to binary file */
   freadreal1(&cell->discharge.dmass_lake,swap,file);
   if(config->river_routing)
   {
-#ifdef IMAGE
     freadreal1(&cell->discharge.dmass_gw,swap,file); // groundwater mass
-#endif
     freadreal1(&cell->discharge.dfout,swap,file);
     freadreal1(&cell->discharge.dmass_river,swap,file);
     freadreal1(&cell->discharge.dmass_sum,swap,file);

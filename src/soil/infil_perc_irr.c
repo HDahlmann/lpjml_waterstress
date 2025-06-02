@@ -83,7 +83,7 @@ Real infil_perc_irr(Stand *stand,        /**< Stand pointer */
     freewater=0.0;
     slug=min(4,infil);
     infil=infil-slug;
-    if(data_irrig->irrig_system==SPRINK || data_irrig->irrig_system==DRIP)
+    if((data_irrig->irrig_system==SPRINK || data_irrig->irrig_system==DRIP) && config->irrig_scenario!=NO_IRRIGATION)
       influx=slug;        /*no surface runoff for DRIP and Sprinkler*/
     else
     {
@@ -97,7 +97,7 @@ Real infil_perc_irr(Stand *stand,        /**< Stand pointer */
     *return_flow_b+=slug - influx;
     frac_g_influx=0; /* first layer has only blue influx, but lower layers with percolation have mixed frac_g_influx */
 
-    if(data_irrig->irrig_system==DRIP)
+    if(data_irrig->irrig_system==DRIP && config->irrig_scenario!=NO_IRRIGATION)
     {
       /* in case of Drip: directly fill up field cap of first two soil layers, no surface runoff, lateral runoff or percolation */
       /* -> this allows simulating perfect irrigation: drip + irrg_threshold = 1 (keep in mind: plant can still be somewhat stressed, if roots go deeper than 2. layer) */
@@ -204,11 +204,11 @@ Real infil_perc_irr(Stand *stand,        /**< Stand pointer */
             getoutputindex(&stand->cell->output,PERC,l,config)+=perc*stand->frac;
             if(l==BOTTOMLAYER)
             {
-#ifdef IMAGE
+//#ifdef IMAGE
               stand->cell->discharge.dmass_gw+=perc*stand->frac*stand->cell->coord.area;
-#else
-              outflux+=perc;
-#endif
+//#else
+//              outflux+=perc;
+//#endif
               *return_flow_b+=perc*(1-stand->frac_g[l]);
             }
             else

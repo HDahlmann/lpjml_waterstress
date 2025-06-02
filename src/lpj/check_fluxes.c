@@ -138,7 +138,7 @@ void check_fluxes(Cell *cell,          /**< cell pointer */
 #ifdef IMAGE
   totw=(cell->discharge.dmass_lake+cell->discharge.dmass_river+cell->discharge.dmass_gw)/cell->coord.area;
 #else
-  totw=(cell->discharge.dmass_lake+cell->discharge.dmass_river)/cell->coord.area;
+  totw=(cell->discharge.dmass_lake+cell->discharge.dmass_river+cell->discharge.dmass_gw)/cell->coord.area;
 #endif
   foreachstand(stand,s,cell->standlist)
   {

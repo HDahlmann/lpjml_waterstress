@@ -88,7 +88,7 @@ Real daily_agriculture_grass(Stand *stand,                /**< stand pointer */
   gp_stand=gp_sum(&stand->pftlist,co2,climate->temp,par,daylength,
                   &gp_stand_leafon,gp_pft,&fpc_total_stand,config);
 
-  if (!config->river_routing)
+  if (!config->river_routing && config->irrig_scenario!=NO_IRRIGATION)
     irrig_amount(stand,data,npft,ncft,month,config);
 
   for (l = 0; l < LASTLAYER; l++)
@@ -128,7 +128,7 @@ Real daily_agriculture_grass(Stand *stand,                /**< stand pointer */
   nnat=getnnat(npft,config);
   index=agtree(ncft,config->nwptype)+data->pft_id-npft+config->nagtree+data->irrigation*getnirrig(ncft,config);
 
-  if (data->irrigation && data->irrig_amount > epsilon)
+  if (data->irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrig_amount > epsilon)
   {
     irrig_apply = max(data->irrig_amount - rainmelt, 0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrig_stor += data->irrig_amount - irrig_apply;
@@ -269,7 +269,7 @@ Real daily_agriculture_grass(Stand *stand,                /**< stand pointer */
   if (isphen)
   {
     harvest = harvest_stand(output, stand, 0.75,config);
-    if (data->irrigation)
+    if (data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
     {
       stand->cell->discharge.dmass_lake += (data->irrig_stor + data->irrig_amount) * stand->cell->coord.area * stand->frac;
       stand->cell->balance.awater_flux -= (data->irrig_stor + data->irrig_amount) * stand->frac;
@@ -307,7 +307,7 @@ Real daily_agriculture_grass(Stand *stand,                /**< stand pointer */
     }
   }
 
-  if (data->irrigation && stand->pftlist.n > 0) /*second element to avoid irrigation on just harvested fields */
+  if (data->irrigation  && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n > 0) /*second element to avoid irrigation on just harvested fields */
     calc_nir(stand,data,gp_stand, wet, eeq,config->others_to_crop);
   transp=0;
   forrootsoillayer(l)

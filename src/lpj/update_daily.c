@@ -17,8 +17,8 @@
 #include "lpj.h"
 
 #define length 1.0 /* characteristic length (m) */
-#ifdef IMAGE
 #define GWCOEFF 100 /**< groundwater outflow coefficient (average amount of release time in reservoir) */
+#ifdef IMAGE
 #endif
 #define BIOTURBRATE 0.001897 /* daily rate for 50% annual bioturbation rate [-]*/
 #define LEAF 0
@@ -41,9 +41,9 @@ void update_daily(Cell *cell,            /**< cell pointer           */
   Pft *pft;
   Real melt=0,eeq,par,daylength,beta;
   Real runoff,snowrunoff;
-#ifdef IMAGE
+//#ifdef IMAGE
   Real fout_gw; // local variable for groundwater outflow (baseflow)
-#endif
+//#endif
   Real gtemp_air;  /* value of air temperature response function */
   Real gtemp_soil[NSOILLAYER]; /* value of soil temperature response function */
   Stocks flux_estab={0,0};
@@ -331,7 +331,7 @@ void update_daily(Cell *cell,            /**< cell pointer           */
        stand->type->landusetype==BIOMASS_TREE || stand->type->landusetype==BIOMASS_GRASS || stand->type->landusetype==WOODPLANTATION)
     {
       data = stand->data;
-      if(data->irrigation)
+      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
       {
         getoutput(&cell->output,IRRIG_STOR,config)+=data->irrig_stor*stand->frac*cell->coord.area;
         getoutput(&cell->output,TWS,config)+=data->irrig_stor*stand->frac;
@@ -352,7 +352,7 @@ void update_daily(Cell *cell,            /**< cell pointer           */
   getoutput(&cell->output,DECAY_WOOD_AGR,config)*=litsum_old_agr[WOOD]>0 ? litsum_new_agr[WOOD]/litsum_old_agr[WOOD] : 1;
 
 
-#ifdef IMAGE
+//#ifdef IMAGE
   // outflow from groundwater reservoir to river
   if (cell->discharge.dmass_gw > 0)
   {
@@ -361,7 +361,7 @@ void update_daily(Cell *cell,            /**< cell pointer           */
     cell->discharge.dmass_gw-=fout_gw;
     getoutput(&cell->output,SEEPAGE,config)+=fout_gw/cell->coord.area;
   }
-#endif
+//#endif
 
   getoutput(&cell->output,RUNOFF,config)+=cell->discharge.drunoff;
   cell->balance.awater_flux+=cell->discharge.drunoff;

@@ -88,7 +88,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
   for(l=0;l<LASTLAYER;l++)
     aet_stand[l]=green_transp[l]=0;
 
-  if(!config->river_routing)
+  if(!config->river_routing && config->irrig_scenario!=NO_IRRIGATION)
     irrig_amount(stand,data,npft,ncft,month,config);
 
   nnat=getnnat(npft,config);
@@ -142,7 +142,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
       update_separate_harvests(output,pft,data->irrigation,day,npft,ncft,config);
       harvest_crop(output,stand,pft,npft,ncft,year,config);
       /* return irrig_stor and irrig_amount */
-      if(data->irrigation)
+      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
       {
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
         stand->cell->balance.awater_flux-=(data->irrig_stor+data->irrig_amount)*stand->frac; /* cell water balance account for cell inflow */
@@ -189,7 +189,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
     rainmelt=0.0;
 
   /* blue water inflow*/
-  if(data->irrigation && data->irrig_amount>epsilon)
+  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrig_amount>epsilon)
   { /* data->irrigation defines if stand is irrigated in general and not if water is delivered that day, initialized in new_agriculture.c and changed in landusechange.c*/
     irrig_apply=max(data->irrig_amount-rainmelt,0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrig_stor+=data->irrig_amount-irrig_apply;
@@ -342,7 +342,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
     {
       update_separate_harvests(output,pft,data->irrigation,day,npft,ncft,config);
       harvest_crop(output,stand,pft,npft,ncft,year,config);
-      if(data->irrigation)
+      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
       {
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
         stand->cell->balance.awater_flux-=(data->irrig_stor+data->irrig_amount)*stand->frac;
@@ -395,7 +395,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
   }
 
   /* calculate net irrigation requirements (NIR) for next days irrigation */
-  if(data->irrigation && stand->pftlist.n>0) /* second element to avoid irrigation on just harvested fields */
+  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /* second element to avoid irrigation on just harvested fields */
     calc_nir(stand,data,gp_stand,wet,eeq,config->others_to_crop);
 
   getoutput(output,TRANSP,config)+=transp;

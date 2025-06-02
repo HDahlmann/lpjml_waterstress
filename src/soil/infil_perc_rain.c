@@ -192,11 +192,11 @@ Real infil_perc_rain(Stand *stand,        /**< Stand pointer */
           getoutputindex(&stand->cell->output,PERC,l,config)+=perc*stand->frac;
           if(l==BOTTOMLAYER)
           {
-#ifdef IMAGE
+//#ifdef IMAGE
             stand->cell->discharge.dmass_gw+=perc*stand->frac*stand->cell->coord.area;
-#else
-            outflux+=perc;
-#endif
+//#else
+//            outflux+=perc;
+//#endif
             *return_flow_b+=perc*(1-stand->frac_g[l]);
           }
           else

@@ -83,7 +83,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
   check(gp_pft);
   gp_stand=gp_sum(&stand->pftlist,co2,climate->temp,par,daylength,
                   &gp_stand_leafon,gp_pft,&fpc_total_stand,config);
-  if (!config->river_routing)
+  if (!config->river_routing && config->irrig_scenario!=NO_IRRIGATION)
     irrig_amount(stand, &data->irrigation, npft, ncft,month,config);
   for(l=0;l<LASTLAYER;l++)
     aet_stand[l]=green_transp[l]=0;
@@ -98,7 +98,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
   if (rainmelt<0)
     rainmelt = 0.0;
 
-  if (data->irrigation.irrigation && data->irrigation.irrig_amount>epsilon)
+  if (data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrigation.irrig_amount>epsilon)
   {
     irrig_apply = max(data->irrigation.irrig_amount - rainmelt, 0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrigation.irrig_stor += data->irrigation.irrig_amount - irrig_apply;
@@ -137,7 +137,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
       phenology_gsi(pft, climate->temp, climate->swdown, day,climate->isdailytemp,config);
     else
       leaf_phenology(pft,climate->temp,day,climate->isdailytemp,config);
-    sprink_interc = (data->irrigation.irrig_system == SPRINK) ? 1 : 0;
+    sprink_interc = (data->irrigation.irrig_system == SPRINK && config->irrig_scenario!=NO_IRRIGATION) ? 1 : 0;
 
     intercept = interception(&wet[p], pft, eeq, climate->prec + irrig_apply*sprink_interc); /* in case of sprinkler, irrig_amount goes through interception, in case of mixed, 0.5 of irrig_amount */
     wet_all += wet[p] * pft->fpc;
@@ -214,7 +214,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
   waterbalance(stand,aet_stand,green_transp,&evap,&evap_blue,wet_all,eeq,cover_stand,
                &frac_g_evap,config->rw_manage);
 
-  if (data->irrigation.irrigation && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
+  if (data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
     calc_nir(stand, &data->irrigation,gp_stand, wet, eeq,config->others_to_crop);
   transp=0;
   forrootsoillayer(l)

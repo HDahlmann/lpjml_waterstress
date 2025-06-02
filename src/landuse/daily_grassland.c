@@ -119,7 +119,7 @@ Real daily_grassland(Stand *stand,                /**< stand pointer */
   gp_stand=gp_sum(&stand->pftlist,co2,climate->temp,par,daylength,
                   &gp_stand_leafon,gp_pft,&fpc_total_stand,config);
 
-  if(!config->river_routing)
+  if(!config->river_routing && config->irrig_scenario!=NO_IRRIGATION)
     irrig_amount(stand,&data->irrigation,npft,ncft,month,config);
 
   for(l=0;l<LASTLAYER;l++)
@@ -163,7 +163,7 @@ Real daily_grassland(Stand *stand,                /**< stand pointer */
 
   index=data->irrigation.irrigation*getnirrig(ncft,config)+(stand->type->landusetype==GRASSLAND ? rmgrass(ncft) : rothers(ncft));
 
-  if(data->irrigation.irrigation && data->irrigation.irrig_amount>epsilon)
+  if(data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrigation.irrig_amount>epsilon)
   {
     irrig_apply=max(data->irrigation.irrig_amount-rainmelt,0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrigation.irrig_stor+=data->irrigation.irrig_amount-irrig_apply;
@@ -489,7 +489,7 @@ Real daily_grassland(Stand *stand,                /**< stand pointer */
     getoutput(output,TRANSP_B,config)+=(aet_stand[l]-green_transp[l])*stand->frac;
   }
 
-  if(data->irrigation.irrigation && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
+  if(data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
     calc_nir(stand,&data->irrigation,gp_stand,wet,eeq,config->others_to_crop);
 
   getoutput(output,TRANSP,config)+=transp;

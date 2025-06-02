@@ -128,7 +128,7 @@ Real daily_biomass_grass(Stand *stand,                /**< stand pointer */
   nnat=getnnat(npft,config);
   index=rbgrass(ncft)+data->irrigation*getnirrig(ncft,config);
 
-  if(data->irrigation && data->irrig_amount>epsilon)
+  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrig_amount>epsilon)
   {
     irrig_apply=max(data->irrig_amount-rainmelt,0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrig_stor+=data->irrig_amount-irrig_apply;
@@ -298,7 +298,7 @@ Real daily_biomass_grass(Stand *stand,                /**< stand pointer */
   if(isphen)
   {
     harvest=harvest_stand(output,stand,param.hfrac_biomass,config);
-    if(data->irrigation)
+    if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
     {
       stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
       stand->cell->balance.awater_flux-=(data->irrig_stor+data->irrig_amount)*stand->frac;
@@ -348,7 +348,7 @@ Real daily_biomass_grass(Stand *stand,                /**< stand pointer */
     getoutputindex(output,CFT_NHARVEST,index,config)+=1.0;
   } /* of if(isphen) */
 
-  if(data->irrigation && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
+  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
     calc_nir(stand,data,gp_stand,wet,eeq,config->others_to_crop);
   transp=0;
   forrootsoillayer(l)

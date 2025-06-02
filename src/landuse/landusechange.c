@@ -550,7 +550,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
       {
         data->irrig_system=stand->cell->ml.irrig_system->crop[cft]; /* irrig_stor was emptied at harvest */
       }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case GRASSLAND:
@@ -591,7 +591,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
           /* change irrig_system */
           data->irrig_system=stand->cell->ml.irrig_system->grass[1];
         }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case OTHERS:
@@ -635,7 +635,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
           /* change irrig_system */
           data->irrig_system=stand->cell->ml.irrig_system->grass[0];
         }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case AGRICULTURE_TREE: case AGRICULTURE_GRASS:
@@ -674,7 +674,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->ag_tree[data->pft_id-npft+config->nagtree];
       }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case BIOMASS_TREE:
@@ -713,7 +713,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->biomass_tree;
       }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario!=NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case BIOMASS_GRASS:
@@ -752,7 +752,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->biomass_grass;
       }
-      if(!data->irrigation)
+      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case WOODPLANTATION:
@@ -791,7 +791,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system = stand->cell->ml.irrig_system->woodplantation;
       }
-      if (!data->irrigation)
+      if (!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system = NOIRRIG;
       break;
     default:
