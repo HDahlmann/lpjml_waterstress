@@ -199,6 +199,7 @@ Real infil_perc_irr(Stand *stand,        /**< Stand pointer */
             {
               perc+=(soil->w[l])*soil->whcs[l];
               soil->w[l]=0;
+              if(perc<0) perc=0;
             }
             reconcile_layer_energy_with_water_shift(soil,l,-perc,vol_water_enth,config); /* subtract enthalpy of percolating water */
             getoutputindex(&stand->cell->output,PERC,l,config)+=perc*stand->frac;

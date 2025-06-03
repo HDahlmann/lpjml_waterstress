@@ -42,7 +42,7 @@ void update_daily(Cell *cell,            /**< cell pointer           */
   Real melt=0,eeq,par,daylength,beta;
   Real runoff,snowrunoff;
 //#ifdef IMAGE
-  Real fout_gw; // local variable for groundwater outflow (baseflow)
+  Real fout_gw=0; // local variable for groundwater outflow (baseflow)
 //#endif
   Real gtemp_air;  /* value of air temperature response function */
   Real gtemp_soil[NSOILLAYER]; /* value of soil temperature response function */
