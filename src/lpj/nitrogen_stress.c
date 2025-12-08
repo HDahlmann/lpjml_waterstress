@@ -21,6 +21,7 @@ Real nitrogen_stress(Pft *pft,             /**< PFT */
                      Real npp,
                      int npft,             /**< number of natural PFTs */
                      int ncft,             /**< number of crop PFTs */
+                     int index,            /**< [in] pft index to write output array */
                      const Config *config  /**< LPJmL configuration  */
                     )                      /** \return total N demand (gN/m2) */
 {
@@ -45,7 +46,7 @@ Real nitrogen_stress(Pft *pft,             /**< PFT */
     {
       if(pft->par->nfixing && config->npp_controlled_bnf)
         pft->npp_bnf=npp;
-      nup=nuptake(pft,&nplant_demand,&ndemand_leaf,npft,ncft,config);
+      nup=nuptake(pft,&nplant_demand,&ndemand_leaf,npft,ncft,index,config);
     }
     else if(pft->stand->type->landusetype!=AGRICULTURE  && (pft->stand->type->landusetype!=OTHERS || !config->others_to_crop))
       pft->vscal+=1;

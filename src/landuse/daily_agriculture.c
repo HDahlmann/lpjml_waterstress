@@ -47,7 +47,6 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
   Real green_transp[LASTLAYER];
   Real evap,evap_blue,rd,gpp,frac_g_evap,runoff,wet_all,intercept,sprink_interc;
   Real rw_apply; /*applied irrigation water from rainwater harvesting storage, counted as green water */
-
   Real *wet; /* wet from pftlist */
   Real return_flow_b; /* irrigation return flows from surface runoff, lateral runoff and percolation (mm)*/
   Real cover_stand;
@@ -96,8 +95,8 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
 
   foreachpft(pft,p,&stand->pftlist)
   {
-    index=(stand->type->landusetype==OTHERS) ? data->irrigation*nirrig+rothers(ncft) : pft->par->id-npft+data->irrigation*nirrig;
     crop=pft->data;
+    index=(stand->type->landusetype==OTHERS) ? data->irrigation*nirrig+rothers(ncft) : pft->par->id-npft+data->irrigation*nirrig;
     /* kill crop at frost events */
     /* trigger 2nd fertilization */
     /* GGCMI phase 3 rule: apply second dosis at fphu=0.25*/
@@ -140,9 +139,9 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
     if(phenology_crop(pft,climate->temp,daylength,npft,config))
     {
       update_separate_harvests(output,pft,data->irrigation,day,npft,ncft,config);
-      harvest_crop(output,stand,pft,npft,ncft,year,config);
+      harvest_crop(output,stand,pft,npft,ncft,year,index,config);
       /* return irrig_stor and irrig_amount */
-      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION)
       {
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
         stand->cell->balance.awater_flux-=(data->irrig_stor+data->irrig_amount)*stand->frac; /* cell water balance account for cell inflow */
@@ -189,7 +188,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
     rainmelt=0.0;
 
   /* blue water inflow*/
-  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrig_amount>epsilon)
+  if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION && data->irrig_amount>epsilon)
   { /* data->irrigation defines if stand is irrigated in general and not if water is delivered that day, initialized in new_agriculture.c and changed in landusechange.c*/
     irrig_apply=max(data->irrig_amount-rainmelt,0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrig_stor+=data->irrig_amount-irrig_apply;
@@ -216,6 +215,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
       {
         pft=getpft(&stand->pftlist,0);
         index=(stand->type->landusetype==OTHERS) ? data->irrigation*nirrig+rothers(ncft) : pft->par->id-npft+data->irrigation*nirrig;
+
         crop=pft->data;
         if(crop->sh!=NULL)
         {
@@ -250,12 +250,13 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
   rainmelt-=(intercep_stand-intercep_stand_blue);
 
   /* rain-water harvesting*/
-  if(!data->irrigation && config->rw_manage && rainmelt<5)
+  if(!(data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->rw_manage && rainmelt<5)
     rw_apply=rw_irrigation(stand,gp_stand,wet,eeq,config); /* Note: RWH supplementary irrigation is here considered green water */
 
   /* INFILTRATION and PERCOLATION */
   if(irrig_apply>epsilon)
   {
+    index=(stand->type->landusetype==OTHERS) ? data->irrigation*nirrig+rothers(ncft) : pft->par->id-npft+data->irrigation*nirrig;
     vol_water_enth = climate->temp*c_water+c_water2ice; /* enthalpy of soil infiltration */
     runoff+=infil_perc_irr(stand,irrig_apply,vol_water_enth,&return_flow_b,npft,ncft,config);
     /* count irrigation events*/
@@ -341,8 +342,8 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
     if(negbm)
     {
       update_separate_harvests(output,pft,data->irrigation,day,npft,ncft,config);
-      harvest_crop(output,stand,pft,npft,ncft,year,config);
-      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
+      harvest_crop(output,stand,pft,npft,ncft,year,index,config);
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION)
       {
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
         stand->cell->balance.awater_flux-=(data->irrig_stor+data->irrig_amount)*stand->frac;
@@ -395,7 +396,7 @@ Real daily_agriculture(Stand *stand,                /**< [inout] stand pointer *
   }
 
   /* calculate net irrigation requirements (NIR) for next days irrigation */
-  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /* second element to avoid irrigation on just harvested fields */
+  if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /* second element to avoid irrigation on just harvested fields */
     calc_nir(stand,data,gp_stand,wet,eeq,config->others_to_crop);
 
   getoutput(output,TRANSP,config)+=transp;

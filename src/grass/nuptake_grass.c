@@ -21,6 +21,7 @@ Real nuptake_grass(Pft *pft,             /**< pointer to PFT data */
                    Real *ndemand_leaf,   /**< N demand of leafs */
                    int npft,             /**< number of natural PFTs */
                    int ncft,             /**< number of crop PFTs */
+                   int index,            /**< [in] pft index to write output array */
                    const Config *config  /**< LPJmL configurtation */
                   )                      /** \return nitrogen uptake (gN/m2/day) */
 {

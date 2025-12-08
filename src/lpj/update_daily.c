@@ -331,7 +331,7 @@ void update_daily(Cell *cell,            /**< cell pointer           */
        stand->type->landusetype==BIOMASS_TREE || stand->type->landusetype==BIOMASS_GRASS || stand->type->landusetype==WOODPLANTATION)
     {
       data = stand->data;
-      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION)
       {
         getoutput(&cell->output,IRRIG_STOR,config)+=data->irrig_stor*stand->frac*cell->coord.area;
         getoutput(&cell->output,TWS,config)+=data->irrig_stor*stand->frac;

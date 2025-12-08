@@ -83,7 +83,7 @@ Stocks cultivate(Cell *cell,           /**< cell pointer */
       pedotransfer(cropstand,NULL,NULL,cropstand->frac);
   }
   data=cropstand->data;
-  data->irrigation= (config->irrig_scenario==ALL_IRRIGATION) || irrigation;
+  data->irrigation= irrigation;
   set_irrigsystem(cropstand,cft,npft,ncft,config);
   pft=addpft(cropstand,config->pftpar+npft+cft,year,day,config);
   phen_variety(pft,vern_date20,cell->coord.lat,day,wtype,npft,ncft,config);

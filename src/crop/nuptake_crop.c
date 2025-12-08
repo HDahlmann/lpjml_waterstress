@@ -21,6 +21,7 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
                   Real *ndemand_leaf,   /**< N demand of leafs */
                   int npft,             /**< number of natural PFTs */
                   int ncft,             /**< number of crop PFTs */
+                  int index,            /**< [in] pft index to write output array */
                   const Config *config  /**< LPJmL configuration */
                  )                      /** \return nitrogen uptake (gN/m2/day) */
 {
@@ -29,7 +30,7 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
 #endif
   Soil *soil;
   Pftcrop *crop;
-  Irrigation *data;
+  //Irrigation *data;
   Real ndemand_leaf_opt,NO3_up=0;
   Real NCplant=0;
   Real f_NCplant=0;
@@ -43,7 +44,7 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
   Real autofert_n=0;
   Real rootdist_n[LASTLAYER];
   Real nc_ratio;
-  int l,nirrig,nnat,index;
+  int l,nnat;
   soil=&pft->stand->soil;
   if(config->permafrost)
     getrootdist(rootdist_n,pft->par->rootdist,soil->mean_maxthaw);
@@ -51,11 +52,10 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
     forrootsoillayer(l)
       rootdist_n[l]=pft->par->rootdist[l];
   nnat=getnnat(npft,config);
-  nirrig=getnirrig(ncft,config);
-  index=(pft->stand->type->landusetype==AGRICULTURE) ? pft->par->id-npft : rothers(ncft);
+  //nirrig=getnirrig(ncft,config);
 
   crop=pft->data;
-  data=pft->stand->data;
+  //data=pft->stand->data;
   if(crop->ind.leaf.carbon+crop->ind.root.carbon==0)
     return 0;
   //fprintcropphys2(stdout,crop->ind,pft->nind);
@@ -177,7 +177,7 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
           if(crop->sh!=NULL)
             crop->sh->nfertsum+=autofert_n*pft->stand->frac;
           else
-            getoutputindex(&pft->stand->cell->output,CFT_NFERT,index+data->irrigation*nirrig,config)+=autofert_n;
+            getoutputindex(&pft->stand->cell->output,CFT_NFERT,index,config)+=autofert_n;
           pft->stand->cell->balance.influx.nitrogen += autofert_n*pft->stand->frac;
           getoutput(&pft->stand->cell->output,FLUX_AUTOFERT,config)+=autofert_n*pft->stand->frac;
         }
@@ -209,12 +209,12 @@ Real nuptake_crop(Pft *pft,             /**< pointer to PFT data */
   if(crop->sh!=NULL)
     crop->nuptakesum += n_uptake;
   else
-    getoutputindex(&pft->stand->cell->output,PFT_NUPTAKE,nnat+index+data->irrigation*nirrig,config)+=n_uptake;
+    getoutputindex(&pft->stand->cell->output,PFT_NUPTAKE,nnat+index,config)+=n_uptake;
   if(config->pft_output_scaled)
-    getoutputindex(&pft->stand->cell->output,PFT_BNF,nnat+index+data->irrigation*nirrig,config)+=fixed_n*pft->stand->frac;
+    getoutputindex(&pft->stand->cell->output,PFT_BNF,nnat+index,config)+=fixed_n*pft->stand->frac;
   else
-    getoutputindex(&pft->stand->cell->output,PFT_BNF,nnat+index+data->irrigation*nirrig,config)+=fixed_n;
-  getoutputindex(&pft->stand->cell->output,PFT_NDEMAND,nnat+index+data->irrigation*nirrig,config)+=max(0,*n_plant_demand-pft->bm_inc.nitrogen)/365;
+    getoutputindex(&pft->stand->cell->output,PFT_BNF,nnat+index,config)+=fixed_n;
+  getoutputindex(&pft->stand->cell->output,PFT_NDEMAND,nnat+index,config)+=max(0,*n_plant_demand-pft->bm_inc.nitrogen)/365;
   pft->stand->cell->balance.n_uptake+=n_uptake*pft->stand->frac;
   pft->stand->cell->balance.n_demand+=max(0,(*n_plant_demand-pft->bm_inc.nitrogen))*pft->stand->frac/365;
   return n_uptake;

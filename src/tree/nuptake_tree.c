@@ -23,7 +23,8 @@ Real nuptake_tree(Pft *pft,             /**< pointer to PFT data */
                   Real *ndemand_leaf,   /**< N demand of leafs */
                   int npft,             /**< number of natural PFTs */
                   int ncft,             /**< number of crop PFTs */
-                  const Config *config  /**< LPJmL configuration */
+                  int index,            /**< [in] pft index to write output array */
+                 const Config *config  /**< LPJmL configuration */
                  )                      /** \return nitrogen uptake (gN/m2/day) */
 {
 

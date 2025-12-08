@@ -108,7 +108,7 @@ void output_gbw_agriculture(Output *output,      /**< output data */
       getoutputindex(output,CFT_RETURN_FLOW_B,index,config)+=return_flow_b;
     }
 
-    if(data->irrigation)
+    if(data->irrigation || config->irrig_scenario==ALL_IRRIGATION)
     {
       getoutput(output,GCONS_IRR,config)+=total_g*stand->frac;
       getoutput(output,BCONS_IRR,config)+=total_b*stand->frac;

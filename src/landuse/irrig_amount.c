@@ -32,7 +32,7 @@ void irrig_amount(Stand *stand,        /**< pointer to non-natural stand */
   data->irrig_amount=0;
   nirrig=getnirrig(ncft,config);
 
-  if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
+  if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION)
   {
     data->irrig_event=isirrigevent(stand);
 

@@ -546,15 +546,15 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
   switch(stand->type->landusetype)
   {
     case AGRICULTURE:
-      if(data->irrigation && data->irrig_system!=stand->cell->ml.irrig_system->crop[cft])
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && data->irrig_system!=stand->cell->ml.irrig_system->crop[cft])
       {
         data->irrig_system=stand->cell->ml.irrig_system->crop[cft]; /* irrig_stor was emptied at harvest */
       }
-      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case GRASSLAND:
-      if(data->irrigation)
+      if(data->irrigation || config->irrig_scenario==ALL_IRRIGATION)
         if(data->irrig_system!=stand->cell->ml.irrig_system->grass[1])
         {
           /* empty irrig_stor and pay back conveyance losses before changing irrigation system */
@@ -591,11 +591,11 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
           /* change irrig_system */
           data->irrig_system=stand->cell->ml.irrig_system->grass[1];
         }
-      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case OTHERS:
-      if(data->irrigation)
+      if(data->irrigation || config->irrig_scenario==ALL_IRRIGATION)
         if(data->irrig_system!=stand->cell->ml.irrig_system->grass[0])
         {
           if(!config->others_to_crop)
@@ -635,11 +635,11 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
           /* change irrig_system */
           data->irrig_system=stand->cell->ml.irrig_system->grass[0];
         }
-      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case AGRICULTURE_TREE: case AGRICULTURE_GRASS:
-      if(data->irrigation && data->irrig_system!=stand->cell->ml.irrig_system->ag_tree[data->pft_id-npft+config->nagtree])
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && data->irrig_system!=stand->cell->ml.irrig_system->ag_tree[data->pft_id-npft+config->nagtree])
       {
         /* empty irrig_stor and pay back conveyance losses before changing irrigation system */
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
@@ -674,11 +674,11 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->ag_tree[data->pft_id-npft+config->nagtree];
       }
-      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case BIOMASS_TREE:
-      if(data->irrigation && data->irrig_system!=stand->cell->ml.irrig_system->biomass_tree)
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && data->irrig_system!=stand->cell->ml.irrig_system->biomass_tree)
       {
         /* empty irrig_stor and pay back conveyance losses before changing irrigation system */
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
@@ -713,11 +713,11 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->biomass_tree;
       }
-      if(!data->irrigation || config->irrig_scenario!=NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario!=NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case BIOMASS_GRASS:
-      if(data->irrigation && data->irrig_system!=stand->cell->ml.irrig_system->biomass_grass)
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && data->irrig_system!=stand->cell->ml.irrig_system->biomass_grass)
       {
         /* empty irrig_stor and pay back conveyance losses before changing irrigation system */
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
@@ -752,11 +752,11 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system=stand->cell->ml.irrig_system->biomass_grass;
       }
-      if(!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION) || config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system=NOIRRIG;
       break;
     case WOODPLANTATION:
-      if (data->irrigation && data->irrig_system != stand->cell->ml.irrig_system->woodplantation)
+      if ((data->irrigation || config->irrig_scenario==ALL_IRRIGATION) && data->irrig_system != stand->cell->ml.irrig_system->woodplantation)
       {
         /* empty irrig_stor and pay back conveyance losses before changing irrigation system */
         stand->cell->discharge.dmass_lake+=(data->irrig_stor+data->irrig_amount)*stand->cell->coord.area*stand->frac;
@@ -791,7 +791,7 @@ void set_irrigsystem(Stand *stand,          /**< stand pointer */
         /* change irrig_system */
         data->irrig_system = stand->cell->ml.irrig_system->woodplantation;
       }
-      if (!data->irrigation || config->irrig_scenario==NO_IRRIGATION)
+      if ((!data->irrigation && config->irrig_scenario!=ALL_IRRIGATION)|| config->irrig_scenario==NO_IRRIGATION)
         data->irrig_system = NOIRRIG;
       break;
     default:

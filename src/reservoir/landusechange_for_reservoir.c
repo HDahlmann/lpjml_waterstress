@@ -318,7 +318,7 @@ void landusechange_for_reservoir(Cell *cell,          /**< pointer to cell */
       foreachstand(stand,s,cell->standlist)
         if(stand->type->landusetype!=NATURAL){
           data=stand->data;
-          if(data->irrigation)
+          if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION))
             sum[1]+=stand->frac;
           else
             sum[0]+=stand->frac;
@@ -335,7 +335,7 @@ void landusechange_for_reservoir(Cell *cell,          /**< pointer to cell */
       foreachstand(stand,s,cell->standlist)
         if(stand->type->landusetype!=NATURAL){
           data=stand->data;
-          if(data->irrigation)
+          if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION))
             sum[1]+=stand->frac;
           else
             sum[0]+=stand->frac;

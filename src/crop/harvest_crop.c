@@ -26,6 +26,7 @@ void harvest_crop(Output *output,      /**< Output data */
                   int npft,            /**< number of natural PFTs */
                   int ncft,            /**< number of crop PFTs */
                   int year,            /**< year of harvest */
+                  int index,           /**< [in] pft index to write output array */
                   const Config *config /**< LPJmL configuration */
                  )
 {
@@ -35,16 +36,12 @@ void harvest_crop(Output *output,      /**< Output data */
   Irrigation *data;
   Real fuelratio,bifratio;
   Real res_onfield, res_remove;
-  int nnat,nirrig,index;
+  int nnat;
   data=stand->data;
   crop=pft->data;
 
   nnat=getnnat(npft,config);
-  nirrig=getnirrig(ncft,config);
-  if(stand->type->landusetype==OTHERS)
-    index=data->irrigation*nirrig+rothers(ncft);
-  else
-    index=pft->par->id-npft+data->irrigation*nirrig;
+  //nirrig=getnirrig(ncft,config);
   if(config->residue_treatment<READ_RESIDUE_DATA)
     res_onfield = config->residue_treatment==FIXED_RESIDUE_REMOVE ? param.residues_in_soil : 1 ;
   else

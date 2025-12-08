@@ -157,7 +157,7 @@ extern Real vegn_sum_crop(const Pft *);
 extern Real agb_crop(const Pft *);
 extern void free_crop(Pft *);
 extern void phen_variety(Pft *,int,Real,int,Bool,int,int,const Config *);
-extern void harvest_crop(Output *,Stand *,Pft *,int,int,int,const Config *);
+extern void harvest_crop(Output *,Stand *,Pft *,int,int,int,int,const Config *);
 extern void adapt_crop_type(Real [],Real,const Pftpar [],int,int,int);
 extern Real wdf_crop(Pft *,Real,Real);
 extern void fprintpar_crop(FILE *,const Pftpar *,const Config *);
@@ -165,7 +165,7 @@ extern void output_daily_crop(Output *,const Pft *,Real,Real,const Config *);
 extern void calc_seasonality(Cell *,int,int,const Config *);
 extern void albedo_crop(Pft *,Real,Real);
 extern void separate_harvests(int, Real *, Real *, Real);
-extern Real nuptake_crop(Pft *,Real *,Real *,int,int,const Config *);
+extern Real nuptake_crop(Pft *,Real *,Real *,int,int,int,const Config *);
 extern Real ndemand_crop(const Pft *,Real *,Real,Real,Real);
 extern Real vmaxlimit_crop(const Pft *,Real,Real);
 

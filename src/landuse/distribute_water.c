@@ -90,7 +90,7 @@ void distribute_water(Cell *cell,            /**< pointer to LPJ cell */
       data->irrig_event=FALSE;
       data->irrig_amount=0;
 
-      if(data->irrigation && config->irrig_scenario!=NO_IRRIGATION)
+      if((data->irrigation || config->irrig_scenario==ALL_IRRIGATION)  && config->irrig_scenario!=NO_IRRIGATION)
       {
         /* determine if irrigation today */
         data->irrig_event=isirrigevent(stand);

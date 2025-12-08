@@ -98,7 +98,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
   if (rainmelt<0)
     rainmelt = 0.0;
 
-  if (data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && data->irrigation.irrig_amount>epsilon)
+  if ((data->irrigation.irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION && data->irrigation.irrig_amount>epsilon)
   {
     irrig_apply = max(data->irrigation.irrig_amount - rainmelt, 0);  /*irrigate only missing deficit after rain, remainder goes to stor */
     data->irrigation.irrig_stor += data->irrigation.irrig_amount - irrig_apply;
@@ -214,7 +214,7 @@ Real daily_woodplantation(Stand *stand,       /**< stand pointer */
   waterbalance(stand,aet_stand,green_transp,&evap,&evap_blue,wet_all,eeq,cover_stand,
                &frac_g_evap,config->rw_manage);
 
-  if (data->irrigation.irrigation && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
+  if ((data->irrigation.irrigation || config->irrig_scenario==ALL_IRRIGATION) && config->irrig_scenario!=NO_IRRIGATION && stand->pftlist.n>0) /*second element to avoid irrigation on just harvested fields */
     calc_nir(stand, &data->irrigation,gp_stand, wet, eeq,config->others_to_crop);
   transp=0;
   forrootsoillayer(l)
