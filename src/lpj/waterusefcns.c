@@ -26,17 +26,26 @@ Wateruse initwateruse(const Filename *filename, /**< filename of wateruse file *
                      )
 {
   Wateruse wateruse;
+  int offset,nstep,ncell;
   wateruse=new(struct wateruse);
   if(wateruse==NULL)
   {
     printallocerr("wateruse");
     return NULL;
   }
-  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,TRUE,config))
+  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,&offset,&nstep,&ncell,TRUE,config))
   {
     free(wateruse);
     return NULL;
   }
+  if (nstep==NMONTH && !iscoupled(*config) )
+  {
+    wateruse->file.size=ncell*nstep*typesizes[wateruse->file.datatype];
+    wateruse->file.n=config->ngridcell*nstep;
+    wateruse->file.var_len=nstep;
+    wateruse->file.offset=(config->startgrid-wateruse->file.firstyear)*nstep*typesizes[wateruse->file.datatype]+offset;
+  }
+
   return wateruse;
 } /* of 'initwateruse' */
 
@@ -65,14 +74,14 @@ static Real *readwateruse(Wateruse wateruse,   /**< Pointer to wateruse data */
     data=readdata(&wateruse->file,NULL,grid,"wateruse",year,config);
   else
   {
-    data=newvec(Real,config->ngridcell);
+    data=newvec(Real,config->ngridcell*wateruse->file.var_len);
     if(data==NULL)
     {
       printallocerr("data");
       return NULL;
     }
     /* no wateruse data available for year, set all to zero */
-    for(cell=0;cell<config->ngridcell;cell++)
+    for(cell=0;cell<config->ngridcell*wateruse->file.var_len;cell++)
       data[cell]=0;
   }
   return data;
@@ -84,13 +93,16 @@ Bool getwateruse(Wateruse wateruse,   /**< Pointer to wateruse data */
                  const Config *config /**< LPJ configuration */
                 )                     /** \return TRUE on error */
 {
-  int cell;
+  int cell,m;
   Real *data;
   data=readwateruse(wateruse,grid,year,config);
   if(data==NULL)
     return TRUE;
   for (cell=0;cell<config->ngridcell;cell++)
-    grid[cell].discharge.wateruse=data[cell];
+    grid[cell].discharge.wateruse=newvec(Real,wateruse->file.var_len);
+  for (cell=0;cell<config->ngridcell;cell++)
+    for (m=0;m<wateruse->file.var_len;m++)
+      grid[cell].discharge.wateruse[m]=data[cell*m+m];
   free(data);
   return FALSE;
 } /* of 'getwateruse' */

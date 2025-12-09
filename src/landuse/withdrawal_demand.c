@@ -29,6 +29,7 @@
 #include "lpj.h"
 
 void withdrawal_demand(Cell *grid,          /**< LPJ grid */
+                       int m,               /**< month (0..11) */
                        const Config *config /**< LPJ configuration */
                       )
 {
@@ -76,10 +77,10 @@ void withdrawal_demand(Cell *grid,          /**< LPJ grid */
       if (!(grid[cell].discharge.wateruse_fraction <= 1 || grid[cell].discharge.wateruse_fraction >= 0))
         printf("ERROR: waterusefraction incorrect in cell lat %f lon %f, waterusefraction %f", grid[cell].coord.lat, grid[cell].coord.lon, grid[cell].discharge.wateruse_fraction);
 #else
-      grid[cell].discharge.waterdeficit += grid[cell].discharge.wateruse;
+      grid[cell].discharge.waterdeficit += grid[cell].discharge.wateruse[m];
 
       /* constrain build up of deficit */
-      grid[cell].discharge.waterdeficit = min(grid[cell].discharge.waterdeficit, 30 * grid[cell].discharge.wateruse);
+      grid[cell].discharge.waterdeficit = min(grid[cell].discharge.waterdeficit, ndaymonth[m] * grid[cell].discharge.wateruse[m]);
 #endif
 
       grid[cell].discharge.wd_demand=grid[cell].discharge.waterdeficit+grid[cell].discharge.gir;

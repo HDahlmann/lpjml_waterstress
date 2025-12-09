@@ -23,6 +23,9 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
                  Type datatype,            /**< datatype for version 2 files */
                  Real scalar,              /**< scalar for version 1 files */
                  int nbands,               /**< number of bands */
+                 int *headeroffset,
+                 int *nstep,
+                 int *ncell,
                  const Config *config      /**< LPJ configuration */
                 )                          /** \return TRUE on error */
 {
@@ -30,6 +33,7 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
   String headername;
   int version;
   size_t offset,filesize;
+  offset=0;
   if((file->file=openinputfile(&header,&file->swap,
                                filename,headername,unit,datatype,
                                &version,&offset,TRUE,config))==NULL)
@@ -56,13 +60,16 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
         fprintf(stderr,"WARNING032: File size of '%s' does not match nyear*ncell*nbands.\n",filename->name);
     }
   }
+  *headeroffset=headersize(headername,version)+offset;
   file->firstyear=header.firstyear;
   file->nyear=header.nyear;
   file->size=header.ncell*header.nbands*typesizes[file->datatype];
   file->n=config->ngridcell*header.nbands;
   file->var_len=header.nbands;
   file->scalar=(version<=1) ? scalar : header.scalar;
-  if(header.nstep!=1)
+  *nstep=header.nstep;
+  *ncell=header.ncell;
+  if(header.nstep!=NMONTH && header.nstep!=1)
   {
     if(isroot(*config))
       fprintf(stderr,"ERROR147: Invalid number of steps=%d in %s data file '%s', must be 1.\n",

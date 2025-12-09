@@ -29,14 +29,15 @@ Landcover initlandcover(int npft,            /**< number of natural PFTs */
 {
   Landcover landcover;
   int i;
-  
+  int offset,nstep,ncell;
+
   landcover=new(struct landcover);
   if(landcover==NULL)
   {
     printallocerr("landcover");
     return NULL;
   }
-  if(opendata(&landcover->file,&config->landcover_filename,"landcover","1",LPJ_FLOAT,LPJ_SHORT,0.01,config->landcovermap_size,TRUE,config))
+  if(opendata(&landcover->file,&config->landcover_filename,"landcover","1",LPJ_FLOAT,LPJ_SHORT,0.01,config->landcovermap_size,&offset,&nstep,&ncell,TRUE,config))
   {
     free(landcover);
     return NULL;

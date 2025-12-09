@@ -65,7 +65,7 @@ typedef struct
   Real wateruse_wd;       /**< water withdrawal demand for households, industry and livestock. */
   Real wateruse_fraction; /**<  ratio between consumption and withdrawal, should be between 0 and 1 */
 #endif
-  Real wateruse;          /**< water consumption for industry,household and livestock, read from input file if specified in lpjml.conf */
+  Real *wateruse;          /**< water consumption for industry,household and livestock, read from input file if specified in lpjml.conf */
   Queue queue;            /**< Delay queue */
   Real *tfunct;           /**< pointer to the factors of the cell's transfer function */
   int next;               /**< index to outflow cell */
@@ -77,7 +77,7 @@ typedef struct extflow *Extflow;
 /* Declaration of functions */
 
 extern void wateruse(Cell *,int,int,int,const Config *);
-extern void withdrawal_demand(Cell *,const Config *);
+extern void withdrawal_demand(Cell *,int,const Config *);
 extern void distribute_water(Cell *,int,int,int,const Config *);
 extern Real *transfer_function(Real,int *);
 extern Extflow initextflow(const Config *);

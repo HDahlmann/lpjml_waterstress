@@ -208,6 +208,7 @@ static int checkcountryfile(const Config *config,const Filename *filename)
 static int checklanduse(const Config *config)
 {
   Climatefile landuse;
+  int offset,nstep,ncell;
   if(config->landuse_filename.fmt==SOCK)
   {
     if(config->start_coupling<=config->firstyear-config->nspinup)
@@ -217,7 +218,7 @@ static int checklanduse(const Config *config)
     return 1;
   }
  /* open landuse input data */
-  if(opendata_seq(&landuse,&config->landuse_filename,"landuse","1",LPJ_SHORT,0.001,2*config->landusemap_size,FALSE,config))
+  if(opendata_seq(&landuse,&config->landuse_filename,"landuse","1",LPJ_SHORT,0.001,2*config->landusemap_size,&offset,&nstep,&ncell,FALSE,config))
   {
     return 1;
   }
@@ -239,9 +240,10 @@ static int checkdatafile(const Config *config,const Filename *filename,char *nam
 {
   Climatefile input;
   /* open input data */
+  int offset,nstep,ncell;
   if(filename->fmt==SOCK)
     return 0;
-  if(opendata_seq(&input,filename,name,unit,datatype,1,nbands,TRUE,config))
+  if(opendata_seq(&input,filename,name,unit,datatype,1,nbands,&offset,&nstep,&ncell,TRUE,config))
     return 1;
   closeclimatefile(&input,TRUE);
   return 0;

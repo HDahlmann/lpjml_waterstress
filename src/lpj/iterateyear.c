@@ -181,7 +181,7 @@ void iterateyear(Outputfile *output,  /**< Output file data */
       if(config->river_routing)
       {
         if(config->withlanduse)
-          withdrawal_demand(grid,config);
+          withdrawal_demand(grid,month,config);
         if(config->extflow)
         {
           if(getextflow(input.extflow,grid,day-1,year))
