@@ -1422,7 +1422,7 @@ void lpj_update_
           if(config.river_routing)
           {
             if(input.landuse!=NULL || input.wateruse!=NULL)
-              withdrawal_demand(grid,&config);
+              withdrawal_demand(grid,month,&config);
 
             drain(grid,month,&config);
 
