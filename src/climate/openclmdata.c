@@ -26,6 +26,7 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
                  int *headeroffset,
                  int *nstep,
                  int *ncell,
+                 int *firstcell,
                  const Config *config      /**< LPJ configuration */
                 )                          /** \return TRUE on error */
 {
@@ -69,6 +70,7 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
   file->scalar=(version<=1) ? scalar : header.scalar;
   *nstep=header.nstep;
   *ncell=header.ncell;
+  *firstcell=header.firstcell;
   if(header.nstep!=NMONTH && header.nstep!=1)
   {
     if(isroot(*config))

@@ -26,14 +26,14 @@ Wateruse initwateruse(const Filename *filename, /**< filename of wateruse file *
                      )
 {
   Wateruse wateruse;
-  int offset,nstep,ncell;
+  int offset,nstep,ncell,firstcell;
   wateruse=new(struct wateruse);
   if(wateruse==NULL)
   {
     printallocerr("wateruse");
     return NULL;
   }
-  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,&offset,&nstep,&ncell,TRUE,config))
+  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,&offset,&nstep,&ncell,&firstcell,TRUE,config))
   {
     free(wateruse);
     return NULL;
@@ -43,7 +43,7 @@ Wateruse initwateruse(const Filename *filename, /**< filename of wateruse file *
     wateruse->file.size=ncell*nstep*typesizes[wateruse->file.datatype];
     wateruse->file.n=config->ngridcell*nstep;
     wateruse->file.var_len=nstep;
-    wateruse->file.offset=(config->startgrid-wateruse->file.firstyear)*nstep*typesizes[wateruse->file.datatype]+offset;
+    wateruse->file.offset=(config->startgrid-firstcell)*nstep*typesizes[wateruse->file.datatype]+offset;
   }
 
   return wateruse;

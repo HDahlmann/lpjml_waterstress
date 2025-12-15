@@ -91,7 +91,7 @@
   "landuse" : "yes",        /* landuse setting; options: "no", "yes", "const", "all_crops", "only_crops" */
   "landuse_year_const" : 2000, /* set landuse year for "const" and "only_crops" cases */
   "reservoir" : true,       /* enables reservoirs (changes discharge and allows for irrigation water source), requires river_routing=true and elevation and reservoir input files  */
-  "wateruse" : "all",       /* HIL water withdrawals and return flows, requires wateruse input, options: "no", "yes" (only for years prescribed in input), "all" (use first year for years before and last year of input for years after period prescibed in input file) */
+  "wateruse" : "yes",       /* HIL water withdrawals and return flows, requires wateruse input, options: "no", "yes" (only for years prescribed in input), "all" (use first year for years before and last year of input for years after period prescibed in input file) */
   "equilsoil" : false,      /* enables soil equilibration  (natural vegetation spinup) */
 #else
   "equilsoil" : true,       /* enables soil equilibration  (natural vegetation spinup) */
@@ -369,11 +369,11 @@ ID                               Fmt                        filename
 
 #else
 
-  "json_config_filename" : "output/lpjml_config_spinup.json", /* Filename of preprocessed configuration file written or null to disable this feature */
+  "json_config_filename" : "output/spinup/lpjml_config_spinup.json", /* Filename of preprocessed configuration file written or null to disable this feature */
 
   "output" :
   [
-    { "id" : "globalflux",       "file" : { "fmt" : "txt", "name" : "output/globalflux_spinup.csv"}}
+    { "id" : "globalflux",       "file" : { "fmt" : "txt", "name" : "output/spinup/globalflux_spinup.csv"}}
   ],
 #endif
 

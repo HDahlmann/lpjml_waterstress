@@ -134,11 +134,11 @@ extern void radiation(Real *, Real *,Real *,Real,int,Dailyclimate *,Real,int);
 extern Real *readdata(Climatefile *,Real *data,const Cell *,const char *,int,const Config *);
 extern int *readintdata(Climatefile *,const Cell *,const char *,int,const Config *);
 extern Bool openclmdata(Climatefile *,const Filename *,const char *,const char *,
-                     Type,Real,int,int *,int *,int *,const Config *config);
+                     Type,Real,int,int *,int *,int *, int *,const Config *config);
 extern Bool opendata(Climatefile *,const Filename *,const char *,const char *,
-                     Type,Type,Real,int,int *,int *,int *,Bool,const Config *config);
+                     Type,Type,Real,int,int *,int *,int *, int *,Bool,const Config *config);
 extern Bool opendata_seq(Climatefile *,const Filename *,const char *,const char *,
-                         Type,Real,int,int *,int *,int *,Bool,const Config *config);
+                         Type,Real,int,int *,int *,int *,int *,Bool,const Config *config);
 extern Bool openinputdata(Infile *,const Filename *,const char *,const char *,
                           Type,Real,int,const Config *config);
 extern Bool readinputdata(Infile *,Real *,const Coord *,int,const Filename *);
