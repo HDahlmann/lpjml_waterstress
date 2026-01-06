@@ -74,8 +74,8 @@ Bool openclmdata(Climatefile *file,        /**< pointer to file */
   if(header.nstep!=NMONTH && header.nstep!=1)
   {
     if(isroot(*config))
-      fprintf(stderr,"ERROR147: Invalid number of steps=%d in %s data file '%s', must be 1.\n",
-              header.nstep,name,filename->name);
+      fprintf(stderr,"ERROR147: Invalid number of steps=%d in %s data file '%s', must be 1 or %d.\n",
+              header.nstep,name,filename->name,NMONTH);
     closeclimatefile(file,isroot(*config));
     return TRUE;
   }
