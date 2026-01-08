@@ -35,6 +35,8 @@ void freecell(Cell *cell,          /**< cell */
     free(cell->ml.irrig_system->ag_tree);
     free(cell->ml.irrig_system);
   }
+  if(config->wateruse)
+    free(cell->discharge.wateruse);
   if(config->reservoir)
   {
     if(cell->ml.resdata!=NULL)
