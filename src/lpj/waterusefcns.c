@@ -99,10 +99,15 @@ Bool getwateruse(Wateruse wateruse,   /**< Pointer to wateruse data */
   if(data==NULL)
     return TRUE;
   for (cell=0;cell<config->ngridcell;cell++)
-    grid[cell].discharge.wateruse=newvec(Real,wateruse->file.var_len);
-  for (cell=0;cell<config->ngridcell;cell++)
-    for (m=0;m<wateruse->file.var_len;m++)
-      grid[cell].discharge.wateruse[m]=data[cell*m+m];
+    grid[cell].discharge.wateruse=newvec(Real,NMONTH);
+  if(wateruse->file.var_len==1)
+    for (cell=0;cell<config->ngridcell;cell++)
+      for (m=0;m<NMONTH;m++)
+        grid[cell].discharge.wateruse[m]=data[cell];
+  else
+    for (cell=0;cell<config->ngridcell;cell++)
+      for (m=0;m<wateruse->file.var_len;m++)
+        grid[cell].discharge.wateruse[m]=data[cell*m+m];
   free(data);
   return FALSE;
 } /* of 'getwateruse' */
@@ -136,5 +141,5 @@ Bool getwateruse_wd(Wateruse wateruse,   /**< Pointer to wateruse data */
   free(data);
   return FALSE;
 } /* of 'getwateruse_wd' */
-
+Real getwateruse_monthly(Wateruse wateruse,int cell,int month)
 #endif
