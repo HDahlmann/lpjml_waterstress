@@ -290,6 +290,13 @@ static Cell *newgrid2(Config *config,          /* Pointer to LPJ configuration *
     grid[i].discharge.act_irrig_amount_from_reservoir=0.0;
     grid[i].discharge.withdrawal=grid[i].discharge.wd_demand=0.0;
     grid[i].discharge.dmass_gw=1000.0*grid[i].coord.area;
+    if(config->wateruse)
+    {
+      grid[i].discharge.wateruse=newvec(Real,NMONTH);
+      checkptr(grid[i].discharge.wateruse);
+    }
+    else
+      grid[i].discharge.wateruse=NULL;
 #ifdef IMAGE
     grid[i].discharge.withdrawal_gw=0.0;
 #endif

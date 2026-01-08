@@ -18,6 +18,7 @@
 
 struct wateruse
 {
+  int nstep;
   Climatefile file;
 };               /* definition of opaque datatype Wateruse */
 
@@ -26,26 +27,24 @@ Wateruse initwateruse(const Filename *filename, /**< filename of wateruse file *
                      )
 {
   Wateruse wateruse;
-  int offset,nstep,ncell,firstcell;
+  int offset,ncell,firstcell;
   wateruse=new(struct wateruse);
   if(wateruse==NULL)
   {
     printallocerr("wateruse");
     return NULL;
   }
-  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,&offset,&nstep,&ncell,&firstcell,TRUE,config))
+  if(opendata(&wateruse->file,filename,"wateruse",NULL,LPJ_FLOAT,LPJ_INT,1000.0,1,&offset,&wateruse->nstep,&ncell,&firstcell,TRUE,config))
   {
     free(wateruse);
     return NULL;
   }
-  if (nstep==NMONTH && !iscoupled(*config) )
+  if(wateruse->nstep!=1 && wateruse->nstep!=NMONTH)
   {
-    wateruse->file.size=ncell*nstep*typesizes[wateruse->file.datatype];
-    wateruse->file.n=config->ngridcell*nstep;
-    wateruse->file.var_len=nstep;
-    wateruse->file.offset=(config->startgrid-firstcell)*nstep*typesizes[wateruse->file.datatype]+offset;
+    if(isroot(*config))
+      fprintf(stderr,"ERROR147: Invaliid time step %d in '%s', must be 1 or 12.\n",wateruse->nstep,filename->name);
+    free(wateruse);
   }
-
   return wateruse;
 } /* of 'initwateruse' */
 
@@ -84,8 +83,6 @@ static Real *readwateruse(Wateruse wateruse,   /**< Pointer to wateruse data */
     for(cell=0;cell<config->ngridcell*wateruse->file.var_len;cell++)
       data[cell]=0;
   }
-  for (cell=0;cell<config->ngridcell;cell++)
-    grid[cell].discharge.wateruse=newvec(Real,NMONTH);
   return data;
 } /* of 'readwateruse' */
 
@@ -100,7 +97,7 @@ Bool getwateruse(Wateruse wateruse,   /**< Pointer to wateruse data */
   data=readwateruse(wateruse,grid,year,config);
   if(data==NULL)
     return TRUE;
-  if(wateruse->file.var_len==1)
+  if(wateruse->nstep==1)
     for (cell=0;cell<config->ngridcell;cell++)
       for (m=0;m<NMONTH;m++)
         grid[cell].discharge.wateruse[m]=data[cell];
