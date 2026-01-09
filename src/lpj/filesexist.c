@@ -481,7 +481,7 @@ Bool filesexist(Config config, /**< LPJmL configuration */
     bad+=checkclmfile(&config,"tamp",&config.tamp_filename,NULL,LPJ_SHORT,TRUE);
   }
   if(config.wateruse)
-    bad+=checkdatafile(&config,&config.wateruse_filename,"wateruse","dm3/yr",LPJ_INT,1);
+    bad+=checkclmfile(&config,"wateruse",&config.wateruse_filename,NULL,LPJ_INT,FALSE);
   bad+=checkclmfile(&config,"temp",&config.temp_filename,"celsius",LPJ_SHORT,TRUE);
   bad+=checkclmfile(&config,"precipitation",&config.prec_filename,"kg/m2/day",LPJ_SHORT,TRUE);
 #ifdef IMAGE
