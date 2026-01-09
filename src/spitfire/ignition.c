@@ -26,7 +26,6 @@ Human_ignition inithumanignition(const Config *config /**< LPJ configuration */
                                                             struct or NULL */
 {
   Human_ignition ignition;
-  int offset,nstep,ncell,firstcell;
 
   ignition=new(struct human_ignition);
   if(ignition==NULL)
@@ -34,7 +33,7 @@ Human_ignition inithumanignition(const Config *config /**< LPJ configuration */
     printallocerr("ignition");
     return NULL;
   }
-  if(opendata(&ignition->file,&config->human_ignition_filename,"human ignition","yr-1",LPJ_FLOAT,LPJ_SHORT,1.0,1,&offset,&nstep,&ncell,&firstcell,TRUE,config))
+  if(opendata(&ignition->file,&config->human_ignition_filename,"human ignition","yr-1",LPJ_FLOAT,LPJ_SHORT,1.0,1,TRUE,config))
   {
     free(ignition);
     return NULL;

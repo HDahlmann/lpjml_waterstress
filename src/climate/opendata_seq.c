@@ -23,10 +23,6 @@ Bool opendata_seq(Climatefile *file,        /**< pointer to file */
                   Type datatype,            /**< datatype for version 2 files */
                   Real scalar,              /**< scalar for version 1 files */
                   int nbands,               /**< number of bands */
-                  int *offset,
-                  int *nstep,
-                  int *ncell,
-                  int *firstcell,
                   Bool ischeck,             /**< check number of bands (TRUE/FALSE) */
                   const Config *config      /**< LPJ configuration */
                  )                          /** \return TRUE on error */
@@ -55,7 +51,7 @@ Bool opendata_seq(Climatefile *file,        /**< pointer to file */
   }
   else
   {
-    if(openclmdata(file,filename,name,unit,datatype,scalar,nbands,offset,nstep,ncell,firstcell,config))
+    if(openclmdata(file,filename,name,unit,datatype,scalar,nbands,config))
       return TRUE;
   }
   if(ischeck && file->var_len!=nbands)
