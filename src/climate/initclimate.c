@@ -70,7 +70,10 @@ static Bool openclimate2(Climatefile *file,const Filename *filename,const char *
   if(file->time_step==YEAR)
   {
     if(isroot(*config))
+    {
       fprintf(stderr,"ERROR438: Yearly time step not allowed in '%s'.\n",filename->name);
+      fprintf(stderr,"ERROR236: Cannot open %s data file.\n",name);
+    }
     return TRUE;
   }
   return FALSE;
